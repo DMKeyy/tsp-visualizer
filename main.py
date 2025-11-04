@@ -3,6 +3,8 @@ from tkinter import ttk, messagebox
 from src.TspSolver import TspSolver
 from src.Ville import Ville
 from src.Algorithms.randomSearch import randomSearch
+from src.Algorithms.localSearch import localSearch
+
 
 
 path = "data/algeria_20_cities_xy.csv"
@@ -25,8 +27,7 @@ def run_algorithm():
     if algo == "Random Search":
         best_route, best_distance = randomSearch(villes, limit)
     elif algo == "Local Search":
-        messagebox.showinfo("Info", "Local Search not implemented yet.")
-        return
+        best_route, best_distance = localSearch(villes, limit)
     else:
         messagebox.showinfo("Info", "Selected algorithm not available yet.")
         return
