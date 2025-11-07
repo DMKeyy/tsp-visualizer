@@ -3,7 +3,7 @@ from tkinter import ttk, messagebox
 from src.TspSolver import TspSolver
 from src.Ville import Ville
 from src.Algorithms.randomSearch import randomSearch
-from src.Algorithms.localSearch import localSearch
+from src.Algorithms.hillClimbing import hillClimbing
 
 
 
@@ -24,10 +24,10 @@ def run_algorithm():
     villes = solver.get_villes()
 
     
-    if algo == "Random Search":
+    if algo == "Recherche aléatoire":
         best_route, best_distance = randomSearch(villes, limit)
-    elif algo == "Local Search":
-        best_route, best_distance = localSearch(villes, limit)
+    elif algo == "Recherche Hill climbing":
+        best_route, best_distance = hillClimbing(villes, limit)
     else:
         messagebox.showinfo("Info", "Selected algorithm not available yet.")
         return
@@ -47,7 +47,7 @@ tk.Label(root, text="TSP Solver", font=("Arial", 18, "bold")).pack(pady=10)
 
 
 tk.Label(root, text="Choose an algorithm:", font=("Arial", 12)).pack(pady=(10, 5))
-algo_choice = ttk.Combobox(root, values=["Random Search", "Local Search", "Simulated Annealing"],state="readonly", font=("Arial", 12))
+algo_choice = ttk.Combobox(root, values=["Recherche aléatoire", "Recherche Hill climbing", "Recherche Recuit-Simulé","Recherche Tabu","Recherche par Algorithme génétique"],state="readonly", font=("Arial", 12))
 algo_choice.current(0)
 algo_choice.pack(pady=5)
 
