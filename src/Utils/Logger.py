@@ -4,7 +4,6 @@ import pandas as pd
 
 class Logger:
     def __init__(self):
-        # in-memory buffer of results for this run
         self.results = []
 
     def record(self, algo_name, best_distance, best_route, iterations):

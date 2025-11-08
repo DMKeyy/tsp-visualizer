@@ -6,7 +6,8 @@ from src.Algorithms.randomSearch import randomSearch
 from src.Algorithms.hillClimbing import hillClimbing
 from src.Algorithms.simulatedAnnealing import simulatedAnnealing
 
-from src.Logger import Logger
+from src.Utils.Logger import Logger
+from src.Utils.visualize import visualize_route
 
 
 
@@ -26,12 +27,13 @@ def run_algorithm():
 
     solver = TspSolver(path)
     villes = solver.get_villes()
+    visual = visual_var.get()
 
     
     if algo == "Recherche aléatoire":
-        best_route, best_distance = randomSearch(villes, limit)
+        best_route, best_distance = randomSearch(villes, limit, visual=visual)
     elif algo == "Recherche Hill climbing":
-        best_route, best_distance = hillClimbing(villes, limit)
+        best_route, best_distance = hillClimbing(villes, limit, visual=visual)
     elif algo == "Recherche Recuit-Simulé":
         try:
             temperature = float(temp_entry.get())
@@ -44,14 +46,16 @@ def run_algorithm():
             messagebox.showerror("Input Error", f"Invalid simulated annealing parameters: {e}")
             return
 
-        best_route, best_distance = simulatedAnnealing(villes, temperature, cooling_rate, limit)
+        best_route, best_distance = simulatedAnnealing(villes, temperature, cooling_rate, limit, visual=visual)
     else:
         messagebox.showinfo("Info", "Selected algorithm not available yet.")
         return
-    route_names = " → ".join([villes[i].name for i in best_route])
-    messagebox.showinfo("Result", f"{algo} Finished!\n\n"f"Best Distance: {best_distance:.2f} km\n\n"f"Best Route:\n{route_names}"
-    )
+    
+    visualize_route(villes, best_route, title=f"Best Route - {algo} ({best_distance:.2f} km)")
 
+    route_names = " → ".join([villes[i].name for i in best_route])
+    messagebox.showinfo("Result", f"{algo} Finished!\n\n"f"Best Distance: {best_distance:.2f} km\n\n"f"Best Route:\n{route_names}")
+    
     logger.record(algo, best_distance, best_route, limit)
     logger.save_csv(save_path)
 
@@ -60,7 +64,7 @@ def show_results():
 
 root = tk.Tk()
 root.title("TSP Solver")
-root.geometry("380x460")
+root.geometry("380x520")
 root.resizable(False, False)
 
 logger = Logger()
@@ -78,6 +82,10 @@ tk.Label(root, text="Number of iterations:", font=("Arial", 12)).pack(pady=(10, 
 iter_entry = tk.Entry(root, font=("Arial", 12), justify="center")
 iter_entry.insert(0, "5000")
 iter_entry.pack(pady=5)
+
+visual_var = tk.BooleanVar(value=True)
+visual_check = tk.Checkbutton(root, text="Show Visualization", variable=visual_var, font=("Arial", 10))
+visual_check.pack(pady=(4, 8))
 
 temp_label = tk.Label(root, text="Initial Temperature:", font=("Arial", 12))
 temp_entry = tk.Entry(root, font=("Arial", 12), justify="center")
