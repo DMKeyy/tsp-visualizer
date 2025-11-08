@@ -4,6 +4,7 @@ from src.TspSolver import TspSolver
 from src.Ville import Ville
 from src.Algorithms.randomSearch import randomSearch
 from src.Algorithms.hillClimbing import hillClimbing
+from src.Algorithms.simulatedAnnealing import simulatedAnnealing
 
 
 
@@ -28,6 +29,19 @@ def run_algorithm():
         best_route, best_distance = randomSearch(villes, limit)
     elif algo == "Recherche Hill climbing":
         best_route, best_distance = hillClimbing(villes, limit)
+    elif algo == "Recherche Recuit-Simulé":
+        try:
+            temperature = float(temp_entry.get())
+            cooling_rate = float(cooling_entry.get())
+            if temperature <= 0:
+                raise ValueError("Temperature must be > 0")
+            if not (0 < cooling_rate < 1):
+                raise ValueError("Cooling rate must be between 0 and 1 (exclusive)")
+        except ValueError as e:
+            messagebox.showerror("Input Error", f"Invalid simulated annealing parameters: {e}")
+            return
+
+        best_route, best_distance = simulatedAnnealing(villes, temperature, cooling_rate, limit)
     else:
         messagebox.showinfo("Info", "Selected algorithm not available yet.")
         return
@@ -39,7 +53,7 @@ def run_algorithm():
 
 root = tk.Tk()
 root.title("TSP Solver")
-root.geometry("450x320")
+root.geometry("380x460")
 root.resizable(False, False)
 
 
@@ -54,8 +68,32 @@ algo_choice.pack(pady=5)
 
 tk.Label(root, text="Number of iterations:", font=("Arial", 12)).pack(pady=(10, 5))
 iter_entry = tk.Entry(root, font=("Arial", 12), justify="center")
-iter_entry.insert(0, "1000")
+iter_entry.insert(0, "5000")
 iter_entry.pack(pady=5)
+
+temp_label = tk.Label(root, text="Initial Temperature:", font=("Arial", 12))
+temp_entry = tk.Entry(root, font=("Arial", 12), justify="center")
+temp_entry.insert(0, "1000")
+
+cooling_label = tk.Label(root, text="Cooling Rate (0-1):", font=("Arial", 12))
+cooling_entry = tk.Entry(root, font=("Arial", 12), justify="center")
+cooling_entry.insert(0, "0.9985")
+
+def show_or_hide_sa_fields(event=None):
+    if algo_choice.get() == "Recherche Recuit-Simulé":
+        temp_label.pack(pady=(8, 2))
+        temp_entry.pack(pady=2)
+        cooling_label.pack(pady=(8, 2))
+        cooling_entry.pack(pady=2)
+    else:
+        temp_label.pack_forget()
+        temp_entry.pack_forget()
+        cooling_label.pack_forget()
+        cooling_entry.pack_forget()
+
+algo_choice.bind("<<ComboboxSelected>>", show_or_hide_sa_fields)
+
+show_or_hide_sa_fields()
 
 tk.Button(root, text="Run Algorithm", font=("Arial", 12, "bold"),bg="#4CAF50", fg="white", width=20, command=run_algorithm).pack(pady=20)
 
