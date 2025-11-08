@@ -6,9 +6,12 @@ from src.Algorithms.randomSearch import randomSearch
 from src.Algorithms.hillClimbing import hillClimbing
 from src.Algorithms.simulatedAnnealing import simulatedAnnealing
 
+from src.Logger import Logger
+
 
 
 path = "data/algeria_20_cities_xy.csv"
+save_path = "data/results.csv"
 
 
 def run_algorithm():
@@ -49,13 +52,18 @@ def run_algorithm():
     messagebox.showinfo("Result", f"{algo} Finished!\n\n"f"Best Distance: {best_distance:.2f} km\n\n"f"Best Route:\n{route_names}"
     )
 
+    logger.record(algo, best_distance, best_route, limit)
+    logger.save_csv(save_path)
 
+def show_results():
+    logger.show_summary(save_path)
 
 root = tk.Tk()
 root.title("TSP Solver")
 root.geometry("380x460")
 root.resizable(False, False)
 
+logger = Logger()
 
 tk.Label(root, text="TSP Solver", font=("Arial", 18, "bold")).pack(pady=10)
 
@@ -98,5 +106,7 @@ show_or_hide_sa_fields()
 tk.Button(root, text="Run Algorithm", font=("Arial", 12, "bold"),bg="#4CAF50", fg="white", width=20, command=run_algorithm).pack(pady=20)
 
 tk.Button(root, text="Exit", font=("Arial", 11),bg="#f44336", fg="white", width=10, command=root.destroy).pack()
+
+tk.Button(root, text="Show Results", font=("Arial", 11), bg="#2196F3", fg="white", width=15, command=show_results).pack(pady=(0, 10))
 
 root.mainloop()
