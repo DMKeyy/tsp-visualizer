@@ -3,7 +3,7 @@ from src.Ville import Ville
 from src.Utils.visualize import setup_live_plot, update_live_plot, finalize_live_plot
 
 
-def randomSearch(villes, limit, visual=True):
+def randomSearch(villes, distance_matrix,limit,visual=True):
     route = []
     best_route = None
 
@@ -18,7 +18,7 @@ def randomSearch(villes, limit, visual=True):
     for i in range(limit):
         middle_part = random.sample(range(1, len(villes)), len(villes) - 1)
         route = [0] + middle_part + [0]
-        current_distance = Ville.calc_route_distance(route,villes)
+        current_distance = Ville.calc_route_distance(route,distance_matrix)
 
         if current_distance < best_distance:
             best_distance = current_distance

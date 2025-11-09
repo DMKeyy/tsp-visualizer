@@ -35,4 +35,4 @@ class Logger:
         pd.set_option('display.max_colwidth', None)
         df = pd.read_csv(filepath)
         print("Summary of Results:")
-        print(df.sort_values("Best Distance"))
+        print(df.sort_values("Best Distance").head(10)) 

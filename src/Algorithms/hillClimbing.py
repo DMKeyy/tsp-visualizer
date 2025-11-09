@@ -4,9 +4,9 @@ from src.Utils.visualize import setup_live_plot, update_live_plot, finalize_live
 
 
 
-def hillClimbing(villes, max_iterations, visual=True):
+def hillClimbing(villes, distance_matrix, max_iterations, visual=True):
     route = [0] + random.sample(range(1, len(villes)), len(villes) - 1) + [0]
-    best_distance = Ville.calc_route_distance(route,villes)
+    best_distance = Ville.calc_route_distance(route, distance_matrix)
 
     best_route = route.copy()
 
@@ -22,7 +22,7 @@ def hillClimbing(villes, max_iterations, visual=True):
         neighbor = route.copy()
         neighbor[i1], neighbor[i2] = neighbor[i2], neighbor[i1]
 
-        neighbor_distance = Ville.calc_route_distance(neighbor, villes)
+        neighbor_distance = Ville.calc_route_distance(neighbor, distance_matrix)
 
         if neighbor_distance < best_distance:
             best_route = neighbor.copy()
