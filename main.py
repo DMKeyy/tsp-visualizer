@@ -5,6 +5,7 @@ from src.Ville import Ville
 from src.Algorithms.randomSearch import randomSearch
 from src.Algorithms.hillClimbing import hillClimbing
 from src.Algorithms.simulatedAnnealing import simulatedAnnealing
+from src.Algorithms.tabuSearch import tabuSearch
 
 from src.Utils.Logger import Logger
 from src.Utils.visualize import visualize_route
@@ -48,12 +49,13 @@ def run_algorithm():
         except ValueError as e:
             messagebox.showerror("Input Error", f"Invalid simulated annealing parameters: {e}")
             return
-        while True:
-            best_route, best_distance = simulatedAnnealing(villes, distance_matrix, temperature, cooling_rate, limit, visual=visual)
-            logger.record(algo, best_distance, best_route, limit)
-            logger.save_csv(save_path)
+            
+        best_route, best_distance = simulatedAnnealing(villes, distance_matrix, temperature, cooling_rate, limit, visual=visual)
 
-            time.sleep(0.2)
+    elif algo == "Recherche Tabu":
+        tabu_size = 15
+        neighborhood_size = 100
+        best_route, best_distance = tabuSearch(villes, distance_matrix, limit, tabu_size, neighborhood_size, visual=visual)
     else:
         messagebox.showinfo("Info", "Selected algorithm not available yet.")
         return

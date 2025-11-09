@@ -35,4 +35,20 @@ class Logger:
         pd.set_option('display.max_colwidth', None)
         df = pd.read_csv(filepath)
         print("Summary of Results:")
-        print(df.sort_values("Best Distance").head(10)) 
+        print(df.sort_values("Best Distance").drop_duplicates(subset=['Best Distance']).drop_duplicates(subset=['Route']).head(10)) 
+
+
+    def show_best_per_algorithm(self, filepath):
+        pd.set_option('display.max_colwidth', None)
+        df = pd.read_csv(filepath)
+
+        df['Best Distance'] = pd.to_numeric(df['Best Distance'], errors='coerce')
+
+        best_min = df.groupby('Algorithm', as_index=False)['Best Distance'].min()
+
+        best_rows = pd.merge(best_min, df, on=['Algorithm', 'Best Distance'], how='left').drop_duplicates(subset=['Algorithm'])
+
+        best_rows = best_rows.sort_values('Best Distance').reset_index(drop=True)
+
+        print("Best distance per algorithm:")
+        print(best_rows[['Algorithm', 'Best Distance', 'Route', 'Iterations']])
