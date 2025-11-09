@@ -1,6 +1,6 @@
 import random
-import matplotlib.pyplot as plt
 from src.Ville import Ville
+from src.Utils.visualize import setup_live_plot, update_live_plot, finalize_live_plot
 
 
 
@@ -10,20 +10,10 @@ def hillClimbing(villes, max_iterations, visual=True):
 
     best_route = route.copy()
 
+    plt_handle = None
+    current_line = best_line = None
     if visual:
-        plt.ion()
-        fig, ax = plt.subplots(figsize=(8, 6))
-
-        x_cities = [v.x for v in villes]
-        y_cities = [v.y for v in villes]
-
-        ax.scatter(x_cities, y_cities, color='royalblue', s=60, zorder=3)
-        for v in villes:
-            ax.text(v.x + 10, v.y + 10, v.name, fontsize=8)
-
-
-        current_line, = ax.plot([], [], color='skyblue', linewidth=1.5, label='Current Route')
-        best_line, = ax.plot([], [], color='orange', linewidth=2.5, label='Best Route')
+        plt_handle, fig, ax, current_line, best_line = setup_live_plot(villes, figsize=(8, 6))
 
     for i in range(max_iterations):
 
@@ -40,22 +30,11 @@ def hillClimbing(villes, max_iterations, visual=True):
             route = neighbor.copy()
 
         if visual:
-            x = [villes[j].x for j in neighbor]
-            y = [villes[j].y for j in neighbor]
-            current_line.set_data(x, y)
+            title = f"Iteration {i+1}/{max_iterations} | Current = {neighbor_distance:.2f} km | Best = {best_distance:.2f} km"
+            update_live_plot(villes, current_line, best_line, neighbor, best_route, ax, title=title)
 
-
-            if best_route:
-                x_best = [villes[j].x for j in best_route]
-                y_best = [villes[j].y for j in best_route]
-                best_line.set_data(x_best, y_best)
-
-            ax.set_title(f"Iteration {i+1}/{max_iterations} | Current = {neighbor_distance:.2f} km | Best = {best_distance:.2f} km")
-            plt.pause(0.001)
-
-    if visual:
-        plt.ioff()
-        plt.show(block=False)
+    if visual and plt_handle is not None:
+        finalize_live_plot(plt_handle)
 
 
     return best_route,best_distance
