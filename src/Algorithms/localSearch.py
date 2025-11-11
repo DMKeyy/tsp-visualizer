@@ -25,10 +25,9 @@ def localSearch(villes, distance_matrix, limit, radius=2, visual=False):
         iteration += 1
 
         neighbors = []
-        size = len(route)
-        for i in range(1, size - 2):
-            max_j = min(i + radius, size - 2)
-            for j in range(i + 1, max_j + 1):
+        
+        for i in range(1, len(route) - 2):
+            for j in range(i + 1, len(route) - 1):
                 neighbor = route.copy()
                 neighbor[i], neighbor[j] = neighbor[j], neighbor[i]
                 neighbors.append(neighbor)

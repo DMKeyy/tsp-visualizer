@@ -133,6 +133,6 @@ tk.Button(root, text="Run Algorithm", font=("Arial", 12, "bold"),bg="#4CAF50", f
 
 tk.Button(root, text="Exit", font=("Arial", 11),bg="#f44336", fg="white", width=10, command=root.destroy).pack()
 
-tk.Button(root, text="Show Results", font=("Arial", 11), bg="#2196F3", fg="white", width=15, command=show_results).pack(pady=(0, 10))
+tk.Button(root, text="Show Stats", font=("Arial", 11), bg="#2196F3", fg="white", width=15, command=show_results).pack(pady=(0, 10))
 
 root.mainloop()
