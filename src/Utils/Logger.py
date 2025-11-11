@@ -31,11 +31,11 @@ class Logger:
         self.results = []
         print(f"Results saved to {filepath}")
 
-    def show_summary(self, filepath):
+    def get_summary(self, filepath):
         pd.set_option('display.max_colwidth', None)
         df = pd.read_csv(filepath)
         print("Summary of Results:")
-        print(df.sort_values("Best Distance").drop_duplicates(subset=['Best Distance']).drop_duplicates(subset=['Route']).head(10)) 
+        return df.sort_values("Best Distance").drop_duplicates(subset=['Best Distance']).drop_duplicates(subset=['Route']).head(10) 
 
 
     def show_best_per_algorithm(self, filepath):
@@ -52,3 +52,13 @@ class Logger:
 
         print("Best distance per algorithm:")
         print(best_rows[['Algorithm', 'Best Distance', 'Route', 'Iterations']])
+
+    def get_avg_per_algo(self, filepath):
+        df = pd.read_csv(filepath)
+        df['Best Distance'] = pd.to_numeric(df['Best Distance'], errors='coerce')
+        return df.groupby('Algorithm')['Best Distance'].mean().sort_values()
+    
+    def get_best_per_algo(self, filepath):
+        df = pd.read_csv(filepath)
+        df['Best Distance'] = pd.to_numeric(df['Best Distance'], errors='coerce')
+        return df.groupby('Algorithm')['Best Distance'].min().sort_values()

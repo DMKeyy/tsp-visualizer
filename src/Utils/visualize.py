@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+
     
 def visualize_route(villes, route, title):
     import matplotlib.pyplot as plt
@@ -58,4 +59,48 @@ def update_live_plot(villes, current_line, best_line, route, best_route, ax, tit
 
 def finalize_live_plot(plt):
     plt.ioff()
+    plt.show(block=False)
+
+def plot_average_distance(avg_series):
+    plt.figure(figsize=(8,6))
+    ax = avg_series.plot(kind='bar', color='royalblue', edgecolor='black')
+    plt.title("Average Distance per Algorithm")
+    plt.ylabel("Average Distance (km)")
+    plt.xlabel("Algorithm")
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+
+    for p in ax.patches:
+        height = p.get_height()
+        try:
+            label = f"{height:.2f} km"
+        except Exception:
+            label = str(height)
+        ax.annotate(label,
+                    (p.get_x() + p.get_width() / 2, height),
+                    ha='center', va='bottom',
+                    fontsize=9, xytext=(0, 3), textcoords='offset points')
+
+    plt.tight_layout()
+    plt.show(block=False)
+
+def plot_best_distance(best_series):
+    plt.figure(figsize=(8,6))
+    ax = best_series.plot(kind='bar', color='orange', edgecolor='black')
+    plt.title("Best Distance per Algorithm")
+    plt.ylabel("Distance (km)")
+    plt.xlabel("Algorithm")
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+
+    for p in ax.patches:
+        height = p.get_height()
+        try:
+            label = f"{height:.2f} km"
+        except Exception:
+            label = str(height)
+        ax.annotate(label,
+                    (p.get_x() + p.get_width() / 2, height),
+                    ha='center', va='bottom',
+                    fontsize=9, xytext=(0, 3), textcoords='offset points')
+
+    plt.tight_layout()
     plt.show(block=False)

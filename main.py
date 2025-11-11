@@ -8,7 +8,7 @@ from src.Algorithms.simulatedAnnealing import simulatedAnnealing
 from src.Algorithms.tabuSearch import tabuSearch
 
 from src.Utils.Logger import Logger
-from src.Utils.visualize import visualize_route
+from src.Utils.visualize import plot_average_distance, plot_best_distance, visualize_route
 import time
 
 
@@ -70,7 +70,12 @@ def run_algorithm():
     logger.save_csv(save_path)
 
 def show_results():
-    logger.show_summary(save_path)
+    avg_series = logger.get_avg_per_algo(save_path)
+    best_series = logger.get_best_per_algo(save_path)
+    
+    plot_average_distance(avg_series)
+    plot_best_distance(best_series)
+    
 
 root = tk.Tk()
 root.title("TSP Solver")
