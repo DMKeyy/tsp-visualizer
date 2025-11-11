@@ -1,8 +1,9 @@
+from asyncio.log import logger
 import tkinter as tk
 from tkinter import ttk, messagebox
 from src.TspSolver import TspSolver
-from src.Ville import Ville
 from src.Algorithms.randomSearch import randomSearch
+from src.Algorithms.localSearch import localSearch
 from src.Algorithms.hillClimbing import hillClimbing
 from src.Algorithms.simulatedAnnealing import simulatedAnnealing
 from src.Algorithms.tabuSearch import tabuSearch
@@ -36,6 +37,8 @@ def run_algorithm():
     
     if algo == "Recherche aléatoire":
         best_route, best_distance = randomSearch(villes, distance_matrix, limit, visual=visual)
+    elif algo == "Recherche Local":
+            best_route, best_distance = localSearch(villes, distance_matrix, limit, radius=2, visual=visual)
     elif algo == "Recherche Hill climbing":
         best_route, best_distance = hillClimbing(villes, distance_matrix, limit, visual=visual)
     elif algo == "Recherche Recuit-Simulé":
@@ -88,7 +91,7 @@ tk.Label(root, text="TSP Solver", font=("Arial", 18, "bold")).pack(pady=10)
 
 
 tk.Label(root, text="Choose an algorithm:", font=("Arial", 12)).pack(pady=(10, 5))
-algo_choice = ttk.Combobox(root, values=["Recherche aléatoire", "Recherche Hill climbing", "Recherche Recuit-Simulé","Recherche Tabu","Recherche par Algorithme génétique"],state="readonly", font=("Arial", 12))
+algo_choice = ttk.Combobox(root, values=["Recherche aléatoire","Recherche Local" ,"Recherche Hill climbing", "Recherche Recuit-Simulé","Recherche Tabu","Recherche par Algorithme génétique"],state="readonly", font=("Arial", 12))
 algo_choice.current(0)
 algo_choice.pack(pady=5)
 
