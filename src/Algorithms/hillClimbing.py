@@ -4,7 +4,7 @@ from src.Utils.visualize import setup_live_plot, update_live_plot, finalize_live
 
 
 
-def hillClimbing(villes, distance_matrix, max_iterations, visual=True):
+def hillClimbing(villes, distance_matrix, visual=True):
     route = [0] + random.sample(range(1, len(villes)), len(villes) - 1) + [0]
     best_distance = Ville.calc_route_distance(route, distance_matrix)
 
@@ -15,22 +15,36 @@ def hillClimbing(villes, distance_matrix, max_iterations, visual=True):
     if visual:
         plt_handle, fig, ax, current_line, best_line = setup_live_plot(villes, figsize=(8, 6))
 
-    for i in range(max_iterations):
+    while True:
 
-        i1, i2 = random.sample(range(1, len(route) - 1), 2)
+        neighbors = []
+        
+        for i in range(1, len(route) - 2):
+            for j in range(i + 1, len(route) - 1):
+                neighbor = route.copy()
+                neighbor[i:j+1] = neighbor[i:j+1][::-1]
+                neighbors.append(neighbor)
 
-        neighbor = route.copy()
-        neighbor[i1], neighbor[i2] = neighbor[i2], neighbor[i1]
 
-        neighbor_distance = Ville.calc_route_distance(neighbor, distance_matrix)
+        best_neighbor = None 
+        best_neighbor_distance = float('inf')
 
-        if neighbor_distance < best_distance:
-            best_route = neighbor.copy()
-            best_distance = neighbor_distance
-            route = neighbor.copy()
+        for n in neighbors:
+            neighbor_distance = Ville.calc_route_distance(n, distance_matrix)
+            if neighbor_distance < best_distance:
+                if neighbor_distance < best_neighbor_distance:
+                    best_neighbor = n
+                    best_neighbor_distance = neighbor_distance
+
+        if best_neighbor is None :
+            break
+
+        route = best_neighbor
+        best_distance = best_neighbor_distance
+        best_route = route.copy()
 
         if visual:
-            title = f"Iteration {i+1}/{max_iterations} | Current = {neighbor_distance:.2f} km | Best = {best_distance:.2f} km"
+            title = f"Iteration {i+1} | Current = {neighbor_distance:.2f} km | Best = {best_distance:.2f} km"
             update_live_plot(villes, current_line, best_line, neighbor, best_route, ax, title=title)
 
     if visual and plt_handle is not None:

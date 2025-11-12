@@ -38,9 +38,9 @@ def run_algorithm():
     if algo == "Recherche aléatoire":
         best_route, best_distance = randomSearch(villes, distance_matrix, limit, visual=visual)
     elif algo == "Recherche Local":
-            best_route, best_distance = localSearch(villes, distance_matrix, limit, radius=2, visual=visual)
+            best_route, best_distance = localSearch(villes, distance_matrix, radius=2, visual=visual)
     elif algo == "Recherche Hill climbing":
-        best_route, best_distance = hillClimbing(villes, distance_matrix, limit, visual=visual)
+        best_route, best_distance = hillClimbing(villes, distance_matrix, visual=visual)
     elif algo == "Recherche Recuit-Simulé":
         try:
             temperature = float(temp_entry.get())
