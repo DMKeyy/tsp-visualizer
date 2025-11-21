@@ -5,7 +5,7 @@ from src.Ville import Ville
 from src.Utils.visualize import setup_live_plot, update_live_plot, finalize_live_plot
 
 
-def simulatedAnnealing(villes, distance_matrix,temperature, cooling_rate, max_iterations, visual=True):
+def simulatedAnnealing(villes, distance_matrix,temperature, cooling_rate, epsilon, visual=True):
 
     route = [0] + random.sample(range(1, len(villes)), len(villes) - 1) + [0]
     current_distance = Ville.calc_route_distance(route, distance_matrix)
@@ -48,11 +48,11 @@ def simulatedAnnealing(villes, distance_matrix,temperature, cooling_rate, max_it
 
         T *= cooling_rate
 
-        if T < 1e-6:
+        if T < epsilon:
             break
 
         if visual and plt_handle is not None:
-            title = f"Iteration {i+1}/{max_iterations} | T={T:.5f} | Δ={delta_distance:.2f} | Best={best_distance:.2f} km"
+            title = f"Iteration {i+1} | T={T:.5f} | Δ={delta_distance:.2f} | Best={best_distance:.2f} km"
             update_live_plot(villes, current_line, best_line, route, best_route, ax, title=title)
 
         if visual and plt_handle is not None:

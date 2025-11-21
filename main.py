@@ -45,15 +45,18 @@ def run_algorithm():
         try:
             temperature = float(temp_entry.get())
             cooling_rate = float(cooling_entry.get())
+            epsilon = float(epsilon_entry.get())
             if temperature <= 0:
                 raise ValueError("Temperature must be > 0")
             if not (0 < cooling_rate < 1):
                 raise ValueError("Cooling rate must be between 0 and 1 (exclusive)")
+            if epsilon <= 0:
+                raise ValueError("Epsilon must be > 0")
         except ValueError as e:
             messagebox.showerror("Input Error", f"Invalid simulated annealing parameters: {e}")
             return
             
-        best_route, best_distance = simulatedAnnealing(villes, distance_matrix, temperature, cooling_rate, limit, visual=visual)
+        best_route, best_distance = simulatedAnnealing(villes, distance_matrix, temperature, cooling_rate, epsilon, visual=visual)
 
     elif algo == "Recherche Tabu":
         tabu_size = 15
@@ -96,7 +99,8 @@ algo_choice.current(0)
 algo_choice.pack(pady=5)
 
 
-tk.Label(root, text="Number of iterations:", font=("Arial", 12)).pack(pady=(10, 5))
+iter_label = tk.Label(root, text="Number of iterations:", font=("Arial", 12))
+iter_label.pack(pady=(10, 5))
 iter_entry = tk.Entry(root, font=("Arial", 12), justify="center")
 iter_entry.insert(0, "5000")
 iter_entry.pack(pady=5)
@@ -113,17 +117,35 @@ cooling_label = tk.Label(root, text="Cooling Rate (0-1):", font=("Arial", 12))
 cooling_entry = tk.Entry(root, font=("Arial", 12), justify="center")
 cooling_entry.insert(0, "0.9985")
 
+epsilon_label = tk.Label(root, text="Epsilon (stopping threshold):", font=("Arial", 12))
+epsilon_entry = tk.Entry(root, font=("Arial", 12), justify="center")
+epsilon_entry.insert(0, "0.01")
+
 def show_or_hide_sa_fields(event=None):
+    # Show/hide Simulated Annealing specific inputs
     if algo_choice.get() == "Recherche Recuit-Simulé":
         temp_label.pack(pady=(8, 2))
         temp_entry.pack(pady=2)
         cooling_label.pack(pady=(8, 2))
         cooling_entry.pack(pady=2)
+        epsilon_label.pack(pady=(8, 2))
+        epsilon_entry.pack(pady=2)
     else:
         temp_label.pack_forget()
         temp_entry.pack_forget()
         cooling_label.pack_forget()
         cooling_entry.pack_forget()
+        epsilon_label.pack_forget()
+        epsilon_entry.pack_forget()
+
+    # Show iterations only for Random Search
+    if algo_choice.get() == "Recherche aléatoire":
+        if not iter_label.winfo_ismapped():
+            iter_label.pack(pady=(10, 5))
+            iter_entry.pack(pady=5)
+    else:
+        iter_label.pack_forget()
+        iter_entry.pack_forget()
 
 algo_choice.bind("<<ComboboxSelected>>", show_or_hide_sa_fields)
 
