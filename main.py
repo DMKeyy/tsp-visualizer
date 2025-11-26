@@ -7,6 +7,7 @@ from src.Algorithms.localSearch import localSearch
 from src.Algorithms.hillClimbing import hillClimbing
 from src.Algorithms.simulatedAnnealing import simulatedAnnealing
 from src.Algorithms.tabuSearch import tabuSearch
+from src.Algorithms.geneticAlgorithm import geneticSearch
 
 from src.Utils.Logger import Logger
 from src.Utils.visualize import plot_average_distance, plot_best_distance, visualize_route
@@ -62,6 +63,32 @@ def run_algorithm():
         tabu_size = 15
         neighborhood_size = 100
         best_route, best_distance = tabuSearch(villes, distance_matrix, limit, tabu_size, neighborhood_size, visual=visual)
+    elif algo == "Recherche par Algorithme génétique":
+        try:
+            pop_size = int(pop_size_entry.get())
+            gens = int(generations_entry.get())
+            mut_rate = float(mutation_entry.get())
+            cross_rate = float(crossover_entry.get())
+            if pop_size <= 0:
+                raise ValueError("Population size must be > 0")
+            if gens <= 0:
+                raise ValueError("Generations must be > 0")
+            if not (0 <= mut_rate <= 1):
+                raise ValueError("Mutation rate must be between 0 and 1")
+            if not (0 <= cross_rate <= 1):
+                raise ValueError("Crossover rate must be between 0 and 1")
+        except ValueError as e:
+            messagebox.showerror("Input Error", f"Invalid genetic algorithm parameters: {e}")
+            return
+        
+        best_route, best_distance = geneticSearch(
+            villes, distance_matrix, 
+            population_size=pop_size, 
+            generations=gens,
+            mutation_rate=mut_rate, 
+            crossover_rate=cross_rate,
+            visual=visual
+        )
     else:
         messagebox.showinfo("Info", "Selected algorithm not available yet.")
         return
@@ -121,6 +148,22 @@ epsilon_label = tk.Label(root, text="Epsilon (stopping threshold):", font=("Aria
 epsilon_entry = tk.Entry(root, font=("Arial", 12), justify="center")
 epsilon_entry.insert(0, "0.01")
 
+pop_size_label = tk.Label(root, text="Population Size:", font=("Arial", 12))
+pop_size_entry = tk.Entry(root, font=("Arial", 12), justify="center")
+pop_size_entry.insert(0, "1000")
+
+generations_label = tk.Label(root, text="Generations:", font=("Arial", 12))
+generations_entry = tk.Entry(root, font=("Arial", 12), justify="center")
+generations_entry.insert(0, "500")
+
+mutation_label = tk.Label(root, text="Mutation Rate (0-1):", font=("Arial", 12))
+mutation_entry = tk.Entry(root, font=("Arial", 12), justify="center")
+mutation_entry.insert(0, "0.02")
+
+crossover_label = tk.Label(root, text="Crossover Rate (0-1):", font=("Arial", 12))
+crossover_entry = tk.Entry(root, font=("Arial", 12), justify="center")
+crossover_entry.insert(0, "0.8")
+
 def show_or_hide_sa_fields(event=None):
     # Show/hide Simulated Annealing specific inputs
     if algo_choice.get() == "Recherche Recuit-Simulé":
@@ -138,8 +181,28 @@ def show_or_hide_sa_fields(event=None):
         epsilon_label.pack_forget()
         epsilon_entry.pack_forget()
 
-    # Show iterations only for Random Search
-    if algo_choice.get() == "Recherche aléatoire":
+    # Show/hide Genetic Algorithm specific inputs
+    if algo_choice.get() == "Recherche par Algorithme génétique":
+        pop_size_label.pack(pady=(8, 2))
+        pop_size_entry.pack(pady=2)
+        generations_label.pack(pady=(8, 2))
+        generations_entry.pack(pady=2)
+        mutation_label.pack(pady=(8, 2))
+        mutation_entry.pack(pady=2)
+        crossover_label.pack(pady=(8, 2))
+        crossover_entry.pack(pady=2)
+    else:
+        pop_size_label.pack_forget()
+        pop_size_entry.pack_forget()
+        generations_label.pack_forget()
+        generations_entry.pack_forget()
+        mutation_label.pack_forget()
+        mutation_entry.pack_forget()
+        crossover_label.pack_forget()
+        crossover_entry.pack_forget()
+
+    # Show iterations only for Random Search and Tabu Search
+    if algo_choice.get() in ("Recherche aléatoire", "Recherche Tabu"):
         if not iter_label.winfo_ismapped():
             iter_label.pack(pady=(10, 5))
             iter_entry.pack(pady=5)
