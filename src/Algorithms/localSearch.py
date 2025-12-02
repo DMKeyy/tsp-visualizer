@@ -3,7 +3,7 @@ from src.Ville import Ville
 from src.Utils.visualize import setup_live_plot, update_live_plot, finalize_live_plot
 
 
-def localSearch(villes, distance_matrix, radius=2, visual=False):
+def localSearch(villes, distance_matrix, max_iterations, radius=2, visual=False):
 
     n = len(villes)
     if n < 3:
@@ -21,7 +21,7 @@ def localSearch(villes, distance_matrix, radius=2, visual=False):
         plt_handle, fig, ax, current_line, best_line = setup_live_plot(villes, figsize=(8, 6))
 
     iteration = 0
-    while True:
+    for i in range(max_iterations):
 
         neighbors = []
         
@@ -31,9 +31,6 @@ def localSearch(villes, distance_matrix, radius=2, visual=False):
                 neighbor[i:j+1] = neighbor[i:j+1][::-1]
                 neighbors.append(neighbor)
 
-        if not neighbors:
-            break
-
         best_neighbor = None
         best_neighbor_distance = float('inf')
         for nb in neighbors:
@@ -42,7 +39,7 @@ def localSearch(villes, distance_matrix, radius=2, visual=False):
                 best_neighbor_distance = d
                 best_neighbor = nb
 
-        if best_neighbor is not None and best_neighbor_distance < current_distance:
+        if best_neighbor_distance < current_distance:
             route = best_neighbor.copy()
             current_distance = best_neighbor_distance
 
@@ -55,8 +52,6 @@ def localSearch(villes, distance_matrix, radius=2, visual=False):
                 title = f"Iteration {iteration} | Current = {current_distance:.2f} km | Best = {best_distance:.2f} km"
                 update_live_plot(villes, current_line, best_line, route, best_route, ax, title=title)
             continue
-        else:
-            break
 
     if visual and plt_handle is not None:
         finalize_live_plot(plt_handle)

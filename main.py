@@ -39,7 +39,7 @@ def run_algorithm():
     if algo == "Recherche aléatoire":
         best_route, best_distance = randomSearch(villes, distance_matrix, limit, visual=visual)
     elif algo == "Recherche Local":
-            best_route, best_distance = localSearch(villes, distance_matrix, radius=2, visual=visual)
+            best_route, best_distance = localSearch(villes, distance_matrix, limit, radius=2, visual=visual)
     elif algo == "Recherche Hill climbing":
         best_route, best_distance = hillClimbing(villes, distance_matrix, visual=visual)
     elif algo == "Recherche Recuit-Simulé":
@@ -112,7 +112,7 @@ def show_results():
 
 root = tk.Tk()
 root.title("TSP Solver")
-root.geometry("380x520")
+root.geometry("380x620")
 root.resizable(False, False)
 
 logger = Logger()
@@ -129,7 +129,7 @@ algo_choice.pack(pady=5)
 iter_label = tk.Label(root, text="Number of iterations:", font=("Arial", 12))
 iter_label.pack(pady=(10, 5))
 iter_entry = tk.Entry(root, font=("Arial", 12), justify="center")
-iter_entry.insert(0, "5000")
+iter_entry.insert(0, "1000")
 iter_entry.pack(pady=5)
 
 visual_var = tk.BooleanVar(value=True)
@@ -201,8 +201,8 @@ def show_or_hide_sa_fields(event=None):
         crossover_label.pack_forget()
         crossover_entry.pack_forget()
 
-    # Show iterations only for Random Search and Tabu Search
-    if algo_choice.get() in ("Recherche aléatoire", "Recherche Tabu"):
+    # Show iterations only for Random Search, Local Search, and Tabu Search
+    if algo_choice.get() in ("Recherche aléatoire", "Recherche Local", "Recherche Tabu"):
         if not iter_label.winfo_ismapped():
             iter_label.pack(pady=(10, 5))
             iter_entry.pack(pady=5)
