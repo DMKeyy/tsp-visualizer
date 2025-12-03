@@ -16,7 +16,7 @@ A Python-based Traveling Salesman Problem (TSP) solver with a graphical user int
 
 - **Real-world Data**: Uses Algerian cities dataset with actual coordinates
 
-- **Flexible Configuration**: Adjustable iteration limits for optimization algorithms
+- **Flexible Configuration**: Adjustable parameters for optimization algorithms
 
 ## Requirements
 
