@@ -28,8 +28,8 @@ A Python-based Traveling Salesman Problem (TSP) solver with a graphical user int
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/DMKeyy/TspSolver.git
-cd TSP_Problem
+git clone https://github.com/DMKeyy/tsp-visualizer
+cd tsp-visualizer
 ```
 
 2. Install required dependencies:
