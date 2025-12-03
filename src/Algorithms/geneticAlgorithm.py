@@ -69,8 +69,8 @@ def geneticSearch( villes, distance_matrix, population_size=100, generations=500
     for gen in range(1, generations + 1):
         new_population = []
 
-        ranked = sorted(zip(population, distances), key=lambda x: x[1])
-        elites = [deepcopy(r[0]) for r in ranked[:elite_size]]
+        population_sorted = sorted(zip(population, distances), key=lambda x: x[1])
+        elites = [deepcopy(r[0]) for r in population_sorted[:elite_size]]
         new_population.extend(elites)
 
         while len(new_population) < population_size:
